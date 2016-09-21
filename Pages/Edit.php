@@ -21,9 +21,9 @@
                 ))->draw('entity/Video/edit');
 
                 if (empty($object)) {
-                    $title = 'Post a comic';
+                    $title = 'Post a video';
                 } else {
-                    $title = 'Edit comic description';
+                    $title = 'Edit video description';
                 }
 
                 if (!empty($this->xhr)) {

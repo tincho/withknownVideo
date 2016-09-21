@@ -1,81 +1,115 @@
-<?=$this->draw('entity/edit/header');?>
-<form action="<?=$vars['object']->getURL()?>" method="post" enctype="multipart/form-data">
+<?= $this->draw('entity/edit/header'); ?>
+    <form action="<?= $vars['object']->getURL() ?>" method="post" enctype="multipart/form-data">
 
-    <div class="row">
+        <div class="row">
 
-        <div class="span8 offset2 edit-pane">
+            <div class="col-md-8 col-md-offset-2 edit-pane">
 
-            <p>
+                <h4>
+                    <?php
+
+                        if (empty($vars['object']->_id)) {
+                            ?>New Video<?php
+                        } else {
+                            ?>Edit Video<?php
+                        }
+
+                    ?>
+                </h4>
+
                 <?php
 
                     if (empty($vars['object']->_id)) {
 
                         ?>
-                        <label>
-                            Add a comic:<br />
-                            <label>
-                                <div id="photo-preview"></div>
-                                    <span class="btn btn-primary btn-file">
-                                        <i class="icon-camera"></i> <span id="photo-filename">Select a comic</span> <input type="file" name="comic" id="comic"
-                                                                                                                           class="span9"
-                                                                                                                           accept="image/*;capture=camera"
-                                                                                                                           onchange="comicPreview(this)"/>
+                        <div id="video-preview"></div>
+                        <p>
+                                <span class="btn btn-primary btn-file">
+                                        <i class="fa fa-video-camera"></i> <span
+                                        id="video-filename">Select a video</span> <input type="file" name="video"
+                                                                                         id="video"
+                                                                                         class="col-md-9 form-control"
+                                                                                         accept="video/*;"
+                                                                                         onchange="videoPreview(this)"/>
 
                                     </span>
-                            </label>
-                        </label>
+                        </p>
+
                     <?php
 
                     }
 
                 ?>
-            </p>
-            <p>
-                <label>
-                    Title (displayed in feeds)<br />
-                    <input type="text" name="title" id="title" value="<?=htmlspecialchars($vars['object']->title)?>" class="span9" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    Description of comic (displayed when image is not available)<br />
-                    <textarea name="description" id="description" class="span9 bodyInput"><?=htmlspecialchars($vars['object']->description)?></textarea>
-                </label>
-            </p>
-            <p>
-                <label>
-                    Accompanying text<br />
-                    <textarea name="body" id="body" class="span9 bodyInput"><?=htmlspecialchars($vars['object']->body)?></textarea>
-                </label>
-            </p>
-            <?=$this->draw('entity/tags/input');?>
-            <?php if (empty($vars['object']->_id)) echo $this->drawSyndication('article'); ?>
-            <p>
-                <?= \Idno\Core\site()->actions()->signForm('/text/edit') ?>
-                <input type="submit" class="btn btn-primary" value="Save" />
-                <input type="button" class="btn" value="Cancel" onclick="hideContentCreateForm();" />
+
+                <div id="video-details" style="<?php
+
+                    /*if (empty($vars['object']->_id)) {
+                        echo 'display:none';
+                    }*/
+
+                    ?>">
+
+                    <div class="content-form">
+                        <label for="title">
+                            Title</label>
+                        <input type="text" name="title" id="title"
+                               value="<?= htmlspecialchars($vars['object']->title) ?>" class="form-control"
+                               placeholder="Give it a title"/>
+                    </div>
+
+                    <?= $this->__([
+                        'name' => 'body',
+                        'value' => $vars['object']->body,
+                        'wordcount' => false,
+                        'class' => 'wysiwyg-short',
+                        'height' => 100,
+                        'placeholder' => 'Describe your video',
+                        'label' => 'Description'
+                    ])->draw('forms/input/richtext')?>
+
+                    <?= $this->draw('entity/tags/input'); ?>
+
+                </div>
+                <div id="video-details-toggle" style="<?php
+                    //if (!empty($vars['object']->_id)) {
+                        echo 'display:none';
+                    //}
+                ?>">
+                    <p>
+                        <small><a href="#" onclick="$('#video-details').show(); $('#video-details-toggle').hide(); return false;">+ Add details</a></small>
+                    </p>
+                </div>
+
+                <?php echo $this->drawSyndication('image', $vars['object']->getPosseLinks()); ?>
+                <?php if (empty($vars['object']->_id)) { ?><input type="hidden" name="forward-to"
+                                                                  value="<?= \Idno\Core\Idno::site()->config()->getDisplayURL() . 'content/all/'; ?>" /><?php } ?>
                 <?= $this->draw('content/access'); ?>
-            </p>
+                <p class="button-bar ">
+                    <?= \Idno\Core\Idno::site()->actions()->signForm('/video/edit') ?>
+                    <input type="button" class="btn btn-cancel" value="Cancel" onclick="hideContentCreateForm();"/>
+                    <input type="submit" class="btn btn-primary" value="Publish"/>
+                </p>
+            </div>
 
         </div>
-
-    </div>
-</form>
+    </form>
     <script>
-        function comicPreview(input) {
+        //if (typeof videoPreview !== function) {
+        function videoPreview(input) {
 
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    $('#photo-preview').html('<img src="" id="photopreview" style="display:none; width: 400px">');
-                    $('#photo-filename').html('Choose different comic');
-                    $('#photopreview').attr('src', e.target.result);
-                    $('#photopreview').show();
+                    $('#video-preview').html('<video src="" id="videopreview" style="display:none; width: 400px" controls="controls"/>');
+                    $('#video-filename').html('Choose different video');
+                    $('#videopreview').attr('src', e.target.result);
+                    $('#videopreview').show();
                 }
 
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        //}
     </script>
-<?=$this->draw('entity/edit/footer');?>
+<?= $this->draw('entity/edit/footer'); ?>
