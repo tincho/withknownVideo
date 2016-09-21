@@ -15,10 +15,16 @@
                     $object = new \IdnoPlugins\Video\Video();
                 }
 
-                $t = \Idno\Core\site()->template();
-                $body = $t->__(array(
+                if ($owner = $object->getOwner()) {
+                    $this->setOwner($owner);
+                }
+
+                $t = \Idno\Core\Idno::site()->template();
+                $edit_body = $t->__(array(
                     'object' => $object
                 ))->draw('entity/Video/edit');
+
+                $body = $t->__(['body' => $edit_body])->draw('entity/editwrapper');
 
                 if (empty($object)) {
                     $title = 'Post a video';
@@ -44,9 +50,9 @@
                     $object = new \IdnoPlugins\Video\Video();
                 }
 
-                if ($object->saveDataFromInput($this)) {
-                    //$this->forward(\Idno\Core\site()->config()->getURL() . 'content/all/#feed');
-                    $this->forward($object->getDisplayURL());
+                if ($object->saveDataFromInput()) {
+                    $forward = $this->getInput('forward-to', $object->getDisplayURL());
+                    $this->forward($forward);
                 }
 
             }
