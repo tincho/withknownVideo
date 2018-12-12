@@ -1,1 +1,1 @@
-<i class="fa fa-video-camera"></i>
+<i class="fa fa-video"></i>
