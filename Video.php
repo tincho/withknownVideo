@@ -100,9 +100,13 @@
                             if ($video = \Idno\Entities\File::createFromFile($_FILES['video']['tmp_name'], $_FILES['video']['name'], $_FILES['video']['type'], true, true)) {
                                 $this->attachFile($video);
 
+                                /*
+                                this wont work as its a VIDEO 
+
                                 // Now get some smaller thumbnails, with the option to override sizes
                                 $sizes = \Idno\Core\Idno::site()->events()->dispatch('video/thumbnail/getsizes', new \Idno\Core\Event(array('sizes' => array('large' => 800, 'medium' => 400, 'small' => 200))));
                                 $eventdata = $sizes->data();
+                                var_dump($eventdata);die;
                                 foreach ($eventdata['sizes'] as $label => $size) {
 
                                     $filename = $_FILES['video']['name'];
@@ -115,6 +119,8 @@
                                         $this->$varname = substr($thumbnail, 0, strpos($thumbnail, '/'));
                                     }
                                 }
+
+                                */
 
                             } else {
                                 \Idno\Core\Idno::site()->session()->addErrorMessage('Video wasn\'t attached.');

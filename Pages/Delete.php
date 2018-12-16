@@ -44,6 +44,7 @@ namespace IdnoPlugins\Video\Pages {
                 $this->forward();
             }
 
+            // @fixme i think this doesnt delete the file ...
             if ($object->delete()) {
                 \Idno\Core\Idno::site()->session()->addMessage(\Idno\Core\Idno::site()->language()->_('Your video was deleted.'));
             } else {
